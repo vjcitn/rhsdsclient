@@ -24,5 +24,6 @@ if (check_hsds()) {
  src <- HSDSSource('http://hsdshdflab.hdfgroup.org')
  f <- HSDSFile(src, '/shared/bioconductor/tenx_full.h5')
  d <- HSDSDataset(f, '/newassay001')
+ sum(d[1,1:27998]) # note the order for bracket access, this is sum for first cell == 4046
 }
 }

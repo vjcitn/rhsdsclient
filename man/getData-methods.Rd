@@ -43,10 +43,16 @@ considerations of data access patterns, e.g., for performance-tuning.
 \examples{
 if (check_hsds()) {
  s <- HSDSSource('http://hsdshdflab.hdfgroup.org')
+ print(s)
  f <- HSDSFile(s, '/shared/bioconductor/tenx_full.h5')
+ print(f)
  d <- HSDSDataset(f, '/newassay001')
- x <- getData(d, c('1:4', '1:27998'), transfermode='JSON')
- # x <- getData(d, c(1:4, 1:27998), transfermode='JSON') # method missing?
+ print(d)
+ x <- getData(d, c('1:4', '1:27998'), transfermode='binary')
+ print(class(x))
+ print(dim(x))
+ # x <- getData(d, c(1:4, 1:27998), transfermode='binary') # method missing?
  x <- d[1:4,1:27998]
+ apply(x,1,sum)
 }
 }
