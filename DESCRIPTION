@@ -1,0 +1,27 @@
+Package: rhsdsclient
+Title: Utilities for working with HDF Scalable Data Service (HSDS) in R
+Description: Provides functionality for reading data from HSDS
+ from within R.
+Version: 1.19.3
+Authors@R: c(
+ person("Samuela", "Pollack", role = c("aut"),email = "spollack@jimmy.harvard.edu"), 
+ person("Shweta", "Gopaulakrishnan", role = c("aut"), email = "reshg@channing.harvard.edu"),
+ person("BJ", "Stubbs", role = c("aut"), email = "rebjh@channing.harvard.edu"),
+ person("Vincent", "Carey", role = c("cre", "aut"), email = "stvjc@channing.harvard.edu")
+ )
+Suggests: knitr, testthat, BiocStyle, DT, 
+	rmarkdown
+Imports: httr, rjson, utils
+Depends: R (>= 3.6), methods, DelayedArray
+License: Artistic-2.0
+LazyLoad: yes
+BiocViews: infrastructure
+Collate: 'indx.R'
+  'Source.R'
+  'File.R'
+  'Dataset.R'
+  'RHDF5Array.R'
+VignetteBuilder: knitr
+Encoding: UTF-8
+biocViews: DataImport, Software
+RoxygenNote: 7.2.1
