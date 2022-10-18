@@ -23,5 +23,6 @@ exposed by a HDF5 server.
 if (check_hsds()) {
  src <- HSDSSource('http://hsdshdflab.hdfgroup.org')
  f10x <- HSDSFile(src, '/shared/bioconductor/tenx_full.h5')
+ f10x
 }
 }

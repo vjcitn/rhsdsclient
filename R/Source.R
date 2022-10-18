@@ -20,12 +20,13 @@ setClass("HSDSSource", representation(endpoint="character", type="character"))
 #' @examples
 #' if (check_hsds()) {
 #'  src.hsds <- HSDSSource('http://hsdshdflab.hdfgroup.org')
+#'  src.hsds
 #' }
 #' @export
 HSDSSource <- function(endpoint, type='hsds')  {
   if (!(type %in% c('h5serv', 'hsds')))
     stop(paste("unknown server type ", type))
-  obj <- new("HSDSSource", endpoint=endpoint, type=type)
+  new("HSDSSource", endpoint=endpoint, type=type)
   # member root id also?
 }
 

@@ -2,7 +2,7 @@ Package: rhsdsclient
 Title: Utilities for working with HDF Scalable Data Service (HSDS) in R
 Description: Provides functionality for reading data from HSDS
  from within R.
-Version: 1.19.3
+Version: 1.19.4
 Authors@R: c(
  person("Samuela", "Pollack", role = c("aut"),email = "spollack@jimmy.harvard.edu"), 
  person("Shweta", "Gopaulakrishnan", role = c("aut"), email = "reshg@channing.harvard.edu"),

@@ -22,6 +22,7 @@ setClass("HSDSFile", representation(src="HSDSSource", domain="character", dsetdf
 #' if (check_hsds()) {
 #'  src <- HSDSSource('http://hsdshdflab.hdfgroup.org')
 #'  f10x <- HSDSFile(src, '/shared/bioconductor/tenx_full.h5')
+#'  f10x
 #' }
 #' @export
 HSDSFile <- function(src, domain)  {
@@ -35,7 +36,7 @@ HSDSFile <- function(src, domain)  {
     return(NULL)
   }
   dsetdf <- findDatasets(src, domain)
-  obj <- new("HSDSFile", src=src, domain=domain, dsetdf=dsetdf)
+  new("HSDSFile", src=src, domain=domain, dsetdf=dsetdf)
 }
 
 .HSDSFile <- function(src, domain)  {  # after deprecation cycle this private function will be used
@@ -49,7 +50,7 @@ HSDSFile <- function(src, domain)  {
     return(NULL)
   }
   dsetdf <- findDatasets(src, domain)
-  obj <- new("HSDSFile", src=src, domain=domain, dsetdf=dsetdf)
+  new("HSDSFile", src=src, domain=domain, dsetdf=dsetdf)
 }
 
 #' Search inner file hierarchy for datasets

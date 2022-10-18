@@ -1,0 +1,97 @@
+---
+title: "Elementary considerations on an R/HSDS interface"
+author: "Vincent J. Carey, stvjc at channing.harvard.edu"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Elementary considerations on an R/HSDS interface}}
+  %\VignetteEncoding{UTF-8}
+output:
+  BiocStyle::html_document:
+    highlight: pygments
+    number_sections: yes
+    theme: united
+    toc: yes
+---
+
+```{r setup,include=TRUE,results="hide",message=FALSE,warning=FALSE}
+library(rhsdsclient)
+library(SummarizedExperiment)
+```
+
+# Introduction
+
+The Bioconductor project makes significant use of HDF5 as an out-of-memory
+storage format for large numerical arrays generated in bioinformatic applications.
+
+HSDS is the [Highly Scalable Data Service](https://www.hdfgroup.org/solutions/highly-scalable-data-service-hsds/) produced by the HDF Group, that
+"brings HDF5 to the cloud".
+
+This document addresses work on interfacing R and HSDS.  The specific use
+case of interest is interrogating matrices stored in HSDS to retrieve
+submatrices, using natural idioms in R including processes that
+work with Bioconductor SummarizedExperiment instances.
+
+# Using the HSDS CLI
+
+To get some context, if we have installed the python
+package [h5pyd}(https://github.com/HDFGroup/h5pyd) appropriately (currently
+I am using version 0.8.3), we could use the `hsls` command to
+learn about a test dataset.
+```
+> system("hsls -r -e http://hsdshdflab.hdfgroup.org /shared/tall.h5", intern=TRUE)
+ [1] "/ Group"                                                   
+ [2] "/g2 Group"                                                 
+ [3] "/g2/dset2.2 Dataset {3, 5}"                                
+ [4] "/g2/dset2.1 Dataset {10}"                                  
+ [5] "/g1 Group"                                                 
+ [6] "/g1/g1.2 Group"                                            
+ [7] "/g1/g1.2/g1.2.1 Group"                                     
+ [8] "/g1/g1.2/g1.2.1/slink    SoftLink {somevalue}"             
+ [9] "/g1/g1.2/extlink         ExternalLink {somepath//somefile}"
+[10] "/g1/g1.1 Group"                                            
+[11] "/g1/g1.1/dset1.1.2 Dataset {20}"                           
+[12] "/g1/g1.1/dset1.1.1 Dataset {10, 10}"                       
+```
+
+This tells us that the HSDS deployment at `http://hsdshdflab.hdfgroup.org`
+has an endpont `/shared/tall.h5/g2/dset2.2` that is an array with shape `(3,5)`.
+
+# A small example with rhsdsclient
+
+## Some R code
+
+We'll continue working with the deployment at `http://hsdshdflab.hdfgroup.org`.
+Methods HSDSSource, HSDSFile, HSDSDataset are used to set up interrogations
+of HDF content.
+
+```{r lktal}
+src = HSDSSource("http://hsdshdflab.hdfgroup.org", "hsds")
+tall = HSDSFile(src, "/shared/tall.h5")
+tall
+listDatasets(tall)
+HSDSDataset(tall, "/g1/g1.1/dset1.1.1")
+```
+
+Bracket methods have been defined to extract
+numerical content.
+```{r lkbra}
+HSDSDataset(tall, "/g1/g1.1/dset1.1.1")[1:4,1:4]
+```
+
+## The GET request
+
+The last R call produced the following request (broken up
+across multiple lines for readability):
+
+```
+GET http://hsdshdflab.hdfgroup.org/datasets/
+   d-d38053ea-3418fe27-22d9-478e7b-913279/
+   value?domain=/shared/tall.h5&select=[0:4:1,0:4:1]
+```
+
+The task of the rhsdsclient package is to take
+matrix-oriented requests, which may involve rownames
+and colnames, and translate them into valid requests,
+potentially reorganizing results so that the
+expectations of the R user are met.

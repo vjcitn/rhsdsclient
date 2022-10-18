@@ -21,5 +21,6 @@ server (either h5serv or hsds.)
 \examples{
 if (check_hsds()) {
  src.hsds <- HSDSSource('http://hsdshdflab.hdfgroup.org')
+ src.hsds
 }
 }
